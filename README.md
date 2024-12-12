@@ -11,12 +11,12 @@ BigDAG is an open-source project designed to facilitate the management and execu
 
 ## Installation
 
-To install BigDAG, clone the repository and install the dependencies:
+To install BigDAG, clone the repository and install it in editable mode:
 
 ```bash
 git clone https://github.com/yourusername/bigdag.git
 cd bigdag
-pip install -r requirements.txt
+pip install -e .
 ```
 
 ## Usage
@@ -36,6 +36,37 @@ python -m bigdag.cli --folder path/to/dag --project your_project_id --dataset yo
 - `--dry`: Print the commands without executing them.
 - `-v`, `--verbose`: Enable verbose output.
 
+## Example DAG Folder
+
+Here is an example structure of a DAG folder:
+
+```
+dag/
+├── financial/
+│   ├── raw/
+│   │   ├── sales.sheet.def.json
+│   │   └── sales.sheet.schema.json
+│   ├── trusted/
+│   │   └── sales.view.sql
+│   └── refined/
+│       └── monthly_sales.table.sql
+└── deps.yaml
+```
+
+## BigQuery Tables
+
+After running the following command:
+
+```bash
+bigdag --folder dag --dataset sales
+```
+
+The following tables and views will be available in the `sales` dataset in BigQuery:
+
+- `financial_raw_sales`: An external table created from the sales sheet definition and schema.
+- `financial_trusted_sales`: A view created from the `financial_raw_sales` table.
+- `financial_refined_monthly_sales`: A table created from the `financial_trusted_sales` view.
+
 ## Testing
 
 To run the tests, use the following command:
@@ -50,7 +81,7 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 
 ## License
 
-This project is licensed under a permissive license. Feel free to use it in your projects, and please give credit where applicable.
+This project is licensed under the MIT License. Feel free to use it in your projects, and please give credit where applicable.
 
 ## Acknowledgments
 
