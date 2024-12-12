@@ -19,12 +19,16 @@ cd bigdag
 pip install -e .
 ```
 
+## Requirements
+
+- Google Cloud SDK (gcloud) tools must be installed and configured on your system.
+
 ## Usage
 
 You can use the CLI to manage your data workflows. Below is an example of how to use the CLI:
 
 ```bash
-python -m bigdag.cli --folder path/to/dag --project your_project_id --dataset your_dataset_name
+bigdag --folder path/to/dag --project your_project_id --dataset your_dataset_name
 ```
 
 ### Options
