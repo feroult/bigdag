@@ -1,0 +1,7 @@
+financial:
+  trusted:
+    sales:
+      - financial_raw_sales
+  refined:
+    monthly_sales:
+      - financial_trusted_sales

@@ -1,0 +1,94 @@
+import os
+import yaml
+import networkx as nx
+
+class Dag:
+    def __init__(self, dag_folder):
+        self.dag_folder = dag_folder
+        self.deps_file = os.path.join(dag_folder, 'deps.yaml')
+        self.dag_objects = self._find_dag_objects()
+        self.dependencies = self._load_dependencies()
+
+    def _load_dependencies(self):
+        with open(self.deps_file, 'r') as file:
+            dependencies = yaml.safe_load(file)
+            if not dependencies:
+                dependencies = {}
+            return dependencies
+
+    def _find_dag_objects(self):
+        dag_objects = {}
+        for root, _, files in os.walk(self.dag_folder):
+            for file in files:
+                if file.endswith('.json') or file.endswith('.sql'):
+                    name, ext = os.path.splitext(file)
+                    relative_path = os.path.relpath(root, self.dag_folder)
+                    obj_name = f"{relative_path.replace(os.sep, '_')}_{name.split('.')[0]}"
+                    obj_type = self._determine_type(name, ext)
+                    file_path = os.path.join(root, file)
+                    dag_objects[obj_name] = (obj_type, file_path)
+        return dag_objects
+
+    def _determine_type(self, name, extension):
+        if extension == '.json':
+            return 'sheet'
+        elif extension == '.sql':
+            if 'view' in name:
+                return 'view'
+            elif 'table' in name:
+                return 'table'
+        return None
+
+    def _build_dependency_graph(self):
+        graph = nx.DiGraph()
+
+        # Add nodes for all DAG objects
+        for obj_name in self.dag_objects.keys():
+            graph.add_node(obj_name)
+
+        # Add edges based on dependencies
+        for zone, subzones in self.dependencies.items():
+            for subzone, objects in subzones.items():
+                for obj, deps in objects.items():
+                    obj_id = f"{zone}_{subzone}_{obj}"
+                    if deps is None:
+                        deps = []
+                    for dep in deps:
+                        dep_id = dep.replace('%', '')
+                        graph.add_edge(dep_id, obj_id)  # Add an edge from dep_id to obj_id
+
+        return graph
+
+    def get_execution_order(self):
+        graph = self._build_dependency_graph()
+        try:
+            return list(nx.topological_sort(graph))
+        except nx.NetworkXUnfeasible as e:
+            raise ValueError("Cycle detected in dependencies") from e
+
+    def get_type(self, object_id):
+        return self.dag_objects.get(object_id, (None,))[0]
+
+    def get_path_prefix(self, object_id):
+        file_path = self.dag_objects.get(object_id, (None, None))[1]
+        if file_path:
+            # Extract everything before the first dot in the file name
+            base_name = os.path.basename(file_path)
+            prefix = base_name.split('.')[0]
+            return os.path.join(os.path.dirname(file_path), prefix)
+        return None
+
+def main():
+    dag_directory = 'dag'
+    dag = Dag(dag_directory)
+    
+    try:
+        sorted_order = dag.get_execution_order()
+        print("Order of objects to be created:")
+        for obj in sorted_order:
+            print(obj)
+    except ValueError as e:
+        print(e)
+
+if __name__ == "__main__":
+    main()
