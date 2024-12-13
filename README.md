@@ -34,12 +34,13 @@ bigdag --folder path/to/dag --project your_project_id --dataset your_dataset_nam
 
 ### Options
 
-- `--folder`: Path to the DAG folder.
-- `--project`: Google Cloud project ID.
-- `--dataset`: Name of the dataset.
-- `--recreate`: Recreate the dataset if it exists.
-- `--dry`: Print the commands without executing them.
+- `-f`, `--folder`: Path to the DAG folder. Defaults to the current directory.
+- `-p`, `--project`: Google Cloud project ID. Defaults to the `BIGDAG_PROJECT_ID` environment variable if not provided.
+- `-d`, `--dataset`: Name of the dataset. This option is required.
+- `-r`, `--recreate`: Recreate the dataset and all objects if it exists.
+- `-dr`, `--dry-run`: Print the commands without executing them.
 - `-v`, `--verbose`: Enable verbose output.
+- `object_ids`: Optional list of object IDs to process. If not provided, all objects in the DAG will be processed.
 
 ## Example DAG Folder
 
@@ -63,7 +64,7 @@ dag/
 After running the following command:
 
 ```bash
-bigdag --folder dag --dataset sales
+bigdag --folder dag --dataset sales --project your_project_id
 ```
 
 The following tables and views will be available in the `sales` dataset in BigQuery:
