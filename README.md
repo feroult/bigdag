@@ -7,7 +7,8 @@ BigDAG is an open-source project designed to facilitate the management and execu
 - **DAG Management**: Define and manage Directed Acyclic Graphs (DAGs) for your data workflows.
 - **BigQuery Integration**: Seamlessly create and manage datasets, tables, views, and external sheets in Google BigQuery.
 - **Command-Line Interface**: Use the CLI to execute workflows, with options for dry runs and verbose output.
-- **Dependency Management**: Automatically handle dependencies between different data objects in your DAG.
+- **Automatic Dependency Detection**: Automatically detect and handle dependencies between different data objects in your DAG using the AutoDeps feature. This reduces the need for manual dependency specification and ensures that your data workflows are executed in the correct order.
+- **Manual Dependency Specification**: In cases where dependencies cannot be automatically inferred from queries, you can specify them manually using a `deps.yaml` file.
 
 ## Installation
 
