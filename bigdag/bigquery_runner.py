@@ -5,11 +5,10 @@ from .dag import Dag
 from .utils import readfile
 
 class BigQueryRunner:
-    def __init__(self, project_id, dataset_name, dag_folder, recreate=False):
+    def __init__(self, project_id, dataset_name, dag_folder):
         self.project_id = project_id
         self.dataset_name = dataset_name
         self.dag_folder = dag_folder
-        self.recreate = recreate
         self.dag = Dag(dag_folder)
 
     def _apply_template(self, query):
@@ -18,13 +17,6 @@ class BigQueryRunner:
 
     def get_commands(self):
         commands = []
-        
-        if self.recreate:
-            # Command to remove the dataset
-            commands.append({
-                'command': f"bq rm --recursive --force --project_id {self.project_id} --dataset {self.dataset_name}",
-                'description': f"dropping dataset {self.dataset_name}"
-            })
 
         # Command to create the dataset
         commands.append({
@@ -60,6 +52,20 @@ class BigQueryRunner:
                     'command': f"bq query --project_id {self.project_id} --use_legacy_sql=false --replace --destination_table={self.project_id}:{self.dataset_name}.{obj_id} \"{table_query}\"",
                     'description': f"creating table {obj_id}"
                 })
+
+        return commands
+
+    def get_recreate_all(self):
+        commands = []
+
+        # Command to remove the dataset
+        commands.append({
+            'command': f"bq rm --recursive --force --project_id {self.project_id} --dataset {self.dataset_name}",
+            'description': f"dropping dataset {self.dataset_name}"
+        })
+
+        # Add the commands to recreate the dataset and objects
+        commands.extend(self.get_commands())
 
         return commands
 

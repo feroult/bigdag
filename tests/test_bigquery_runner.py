@@ -36,12 +36,12 @@ class TestBigQueryRunner(unittest.TestCase):
 
         self.assertEqual(commands, expected_commands)
 
-    def test_get_commands_with_recreate(self):
+    def test_get_recreate_all(self):
         project_id = 'test_project'
         dataset_name = 'test_dataset'
         dag_directory = 'tests/dag1'
-        runner = BigQueryRunner(project_id, dataset_name, dag_directory, recreate=True)
-        commands = runner.get_commands()
+        runner = BigQueryRunner(project_id, dataset_name, dag_directory)
+        commands = runner.get_recreate_all()
 
         sales_view_query = readfile('tests/dag1/financial/trusted/sales.view.sql')
         monthly_sales_table_query = readfile('tests/dag1/financial/refined/monthly_sales.table.sql')

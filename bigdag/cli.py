@@ -14,16 +14,22 @@ def cli(dag_folder, dataset_name, project_id, recreate, dry, verbose):
     if project_id is None:
         raise click.UsageError("Project ID must be provided either via the --project option or the BIGDAG_PROJECT_ID environment variable.")
     
-    runner = BigQueryRunner(project_id, dataset_name, dag_folder, recreate)
+    runner = BigQueryRunner(project_id, dataset_name, dag_folder)
     
     try:
         if dry:
             # Only print the commands without descriptions
-            commands = runner.get_commands()
+            commands = runner.get_recreate_all() if recreate else runner.get_commands()
             for cmd_info in commands:
                 print(cmd_info['command'])
         else:
-            runner.run_commands(dry_run=dry, verbose=verbose)
+            if recreate:
+                commands = runner.get_recreate_all()
+                for cmd_info in commands:
+                    print(cmd_info['description'])
+                runner.run_commands(dry_run=dry, verbose=verbose)
+            else:
+                runner.run_commands(dry_run=dry, verbose=verbose)
     except ValueError as e:
         print(e)
     except RuntimeError as e:
