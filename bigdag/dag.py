@@ -13,6 +13,8 @@ class Dag:
         self._merge_dependencies()
 
     def _load_dependencies(self):
+        if not os.path.exists(self.deps_file):
+            return {}
         with open(self.deps_file, 'r') as file:
             dependencies = yaml.safe_load(file)
             if not dependencies:
