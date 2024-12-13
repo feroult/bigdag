@@ -82,7 +82,8 @@ class Dag:
     def get_execution_order(self):
         graph = self._build_dependency_graph()
         try:
-            return list(nx.topological_sort(graph))
+            # Sort nodes by topological order and then alphabetically
+            return sorted(nx.topological_sort(graph), key=lambda x: (len(nx.ancestors(graph, x)), x))
         except nx.NetworkXUnfeasible as e:
             raise ValueError("Cycle detected in dependencies") from e
 
