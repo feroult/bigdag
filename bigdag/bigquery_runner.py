@@ -65,6 +65,7 @@ class BigQueryRunner:
 
     def run_commands(self, dry_run=False, verbose=False):
         commands = self.get_commands()
+        total_start_time = time.time()
 
         for cmd_info in commands:
             command = cmd_info['command']
@@ -85,3 +86,6 @@ class BigQueryRunner:
                     print(result.stdout)
                 else:
                     print(f"[ok] {elapsed_time:.2f} secs")
+
+        total_elapsed_time = time.time() - total_start_time
+        print(f"All commands executed successfully in {total_elapsed_time:.2f} seconds.")
