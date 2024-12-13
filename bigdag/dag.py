@@ -98,18 +98,3 @@ class Dag:
             prefix = base_name.split('.')[0]
             return os.path.join(os.path.dirname(file_path), prefix)
         return None
-
-def main():
-    dag_directory = 'dag'
-    dag = Dag(dag_directory)
-    
-    try:
-        sorted_order = dag.get_execution_order()
-        print("Order of objects to be created:")
-        for obj in sorted_order:
-            print(obj)
-    except ValueError as e:
-        print(e)
-
-if __name__ == "__main__":
-    main()
