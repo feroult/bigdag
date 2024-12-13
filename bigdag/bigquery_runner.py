@@ -88,4 +88,4 @@ class BigQueryRunner:
                     print(f"[ok] {elapsed_time:.2f} secs")
 
         total_elapsed_time = time.time() - total_start_time
-        print(f"\nall commands executed successfully in {total_elapsed_time:.2f} seconds.")
+        print(f"all commands executed successfully in {total_elapsed_time:.2f} seconds.")
