@@ -3,8 +3,8 @@ import os
 from .bigquery_runner import BigQueryRunner
 
 @click.command(context_settings=dict(ignore_unknown_options=True))
-@click.option('-f', '--folder', 'dag_folder', required=True, help='Path to the DAG folder.')
-@click.option('-p', '--project', 'project_id', default=lambda: os.environ.get('BIGDAG_PROJECT_ID', None), help='Google Cloud project ID.')
+@click.option('-p', '--project', 'project_id', default=lambda: os.environ.get('BIGDAG_PROJECT_ID', None), help='Google Cloud project ID. Defaults to the BIGDAG_PROJECT_ID environment variable if not provided.')
+@click.option('-f', '--folder', 'dag_folder', default='.', show_default=True, help='Path to the DAG folder.')
 @click.option('-d', '--dataset', 'dataset_name', required=True, help='Name of the dataset.')
 @click.option('-r', '--recreate', is_flag=True, help='Recreate the dataset if it exists.')
 @click.option('-dr', '--dry-run', 'dry', is_flag=True, help='Print the commands without executing them.')
