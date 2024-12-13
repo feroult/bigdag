@@ -3,11 +3,11 @@ import os
 from .bigquery_runner import BigQueryRunner
 
 @click.command(context_settings=dict(ignore_unknown_options=True))
-@click.option('--folder', 'dag_folder', required=True, help='Path to the DAG folder.')
-@click.option('--project', 'project_id', default=lambda: os.environ.get('BIGDAG_PROJECT_ID', None), help='Google Cloud project ID.')
-@click.option('--dataset', 'dataset_name', required=True, help='Name of the dataset.')
-@click.option('--recreate', is_flag=True, help='Recreate the dataset if it exists.')
-@click.option('--dry', is_flag=True, help='Print the commands without executing them.')
+@click.option('-f', '--folder', 'dag_folder', required=True, help='Path to the DAG folder.')
+@click.option('-p', '--project', 'project_id', default=lambda: os.environ.get('BIGDAG_PROJECT_ID', None), help='Google Cloud project ID.')
+@click.option('-d', '--dataset', 'dataset_name', required=True, help='Name of the dataset.')
+@click.option('-r', '--recreate', is_flag=True, help='Recreate the dataset if it exists.')
+@click.option('-dr', '--dry-run', 'dry', is_flag=True, help='Print the commands without executing them.')
 @click.option('-v', '--verbose', is_flag=True, help='Enable verbose output.')
 @click.argument('object_ids', nargs=-1)
 def cli(dag_folder, dataset_name, project_id, recreate, dry, verbose, object_ids):
