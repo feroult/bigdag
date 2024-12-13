@@ -30,12 +30,13 @@ class AutoDeps:
                     sql_content = f.read()
                     for dep_id in self.dag_objects.keys():
                         if dep_id in sql_content:
-                            zone, subzone, _ = obj_id.split('_', 2)
+                            path_parts = obj_id.split('_')
+                            zone, subzone, obj_name = path_parts[0], path_parts[1], '_'.join(path_parts[2:])
                             if zone not in dependencies:
                                 dependencies[zone] = {}
                             if subzone not in dependencies[zone]:
                                 dependencies[zone][subzone] = {}
-                            if obj_id not in dependencies[zone][subzone]:
-                                dependencies[zone][subzone][obj_id] = []
-                            dependencies[zone][subzone][obj_id].append(dep_id)
+                            if obj_name not in dependencies[zone][subzone]:
+                                dependencies[zone][subzone][obj_name] = []
+                            dependencies[zone][subzone][obj_name].append(dep_id)
         return dependencies

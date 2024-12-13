@@ -1,6 +1,7 @@
 import os
 import yaml
 import networkx as nx
+from bigdag.auto_deps import AutoDeps
 
 class Dag:
     def __init__(self, dag_folder):
@@ -8,6 +9,8 @@ class Dag:
         self.deps_file = os.path.join(dag_folder, 'deps.yaml')
         self.dag_objects = self._find_dag_objects()
         self.dependencies = self._load_dependencies()
+        self.auto_deps = AutoDeps(dag_folder).get_dag()
+        self._merge_dependencies()
 
     def _load_dependencies(self):
         with open(self.deps_file, 'r') as file:
@@ -15,6 +18,19 @@ class Dag:
             if not dependencies:
                 dependencies = {}
             return dependencies
+
+    def _merge_dependencies(self):
+        def merge_dicts(dict1, dict2):
+            for key, value in dict2.items():
+                if key in dict1:
+                    if isinstance(value, dict):
+                        merge_dicts(dict1[key], value)
+                    else:
+                        dict1[key] = list(set(dict1[key] + value))
+                else:
+                    dict1[key] = value
+
+        merge_dicts(self.dependencies, self.auto_deps)
 
     def _find_dag_objects(self):
         dag_objects = {}
@@ -54,7 +70,8 @@ class Dag:
                     add_dependencies(value, current_prefix)
                 else:
                     for dep in value:
-                        graph.add_edge(dep, current_prefix)
+                        if not graph.has_edge(dep, current_prefix):
+                            graph.add_edge(dep, current_prefix)
 
         add_dependencies(self.dependencies)
 

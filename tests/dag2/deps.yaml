@@ -3,12 +3,8 @@ trusted:
     regional:
       stock_view1:
         - raw_logistics_regional_stock
-      stock_view2:
-        - raw_logistics_regional_stock
 refined:
   logistics:
     regional:
       product_table1:
         - trusted_logistics_regional_stock_view1
-      product_table2:
-        - trusted_logistics_regional_stock_view2

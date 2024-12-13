@@ -19,10 +19,10 @@ class TestAutoDeps(unittest.TestCase):
         expected_dependencies = {
             'financial': {
                 'trusted': {
-                    'financial_trusted_sales': ['financial_raw_sales']
+                    'sales': ['financial_raw_sales']
                 },
                 'refined': {
-                    'financial_refined_monthly_sales': ['financial_trusted_sales']
+                    'monthly_sales': ['financial_trusted_sales']
                 }
             }
         }
