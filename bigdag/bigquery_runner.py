@@ -18,12 +18,6 @@ class BigQueryRunner:
     def get_commands(self, object_ids=None):
         commands = []
 
-        # Command to create the dataset
-        commands.append({
-            'command': f"bq mk --project_id {self.project_id} --dataset {self.dataset_name}",
-            'description': f"creating dataset {self.dataset_name}"
-        })
-
         # Determine the execution order
         execution_order = self.dag.get_execution_order()
         if object_ids is not None:
@@ -68,7 +62,13 @@ class BigQueryRunner:
             'description': f"dropping dataset {self.dataset_name}"
         })
 
-        # Add the commands to recreate the dataset and objects
+        # Command to create the dataset
+        commands.append({
+            'command': f"bq mk --project_id {self.project_id} --dataset {self.dataset_name}",
+            'description': f"creating dataset {self.dataset_name}"
+        })
+
+        # Add the commands to recreate the objects
         commands.extend(self.get_commands())
 
         return commands

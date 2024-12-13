@@ -17,10 +17,6 @@ class TestBigQueryRunner(unittest.TestCase):
 
         expected_commands = [
             {
-                'command': "bq mk --project_id test_project --dataset test_dataset",
-                'description': "creating dataset test_dataset"
-            },
-            {
                 'command': "bq mk --project_id test_project --schema tests/dag1/financial/raw/sales.sheet.schema.json --external_table_definition tests/dag1/financial/raw/sales.sheet.def.json test_dataset.financial_raw_sales",
                 'description': "creating spreadsheet financial_raw_sales"
             },
@@ -83,10 +79,6 @@ class TestBigQueryRunner(unittest.TestCase):
         sales_view_query = readfile('tests/dag1/financial/trusted/sales.view.sql')
 
         expected_commands = [
-            {
-                'command': "bq mk --project_id test_project --dataset test_dataset",
-                'description': "creating dataset test_dataset"
-            },
             {
                 'command': "bq mk --project_id test_project --schema tests/dag1/financial/raw/sales.sheet.schema.json --external_table_definition tests/dag1/financial/raw/sales.sheet.def.json test_dataset.financial_raw_sales",
                 'description': "creating spreadsheet financial_raw_sales"
