@@ -1,4 +1,5 @@
 import os
+from bigdag.utils import readfile
 
 class AutoDeps:
     def __init__(self, dag_folder):
@@ -26,17 +27,16 @@ class AutoDeps:
         dependencies = {}
         for obj_id, file_path in self.dag_objects.items():
             if file_path.endswith('.sql'):
-                with open(file_path, 'r') as f:
-                    sql_content = f.read()
-                    for dep_id in self.dag_objects.keys():
-                        if dep_id in sql_content:
-                            path_parts = obj_id.split('_')
-                            zone, subzone, obj_name = path_parts[0], path_parts[1], '_'.join(path_parts[2:])
-                            if zone not in dependencies:
-                                dependencies[zone] = {}
-                            if subzone not in dependencies[zone]:
-                                dependencies[zone][subzone] = {}
-                            if obj_name not in dependencies[zone][subzone]:
-                                dependencies[zone][subzone][obj_name] = []
-                            dependencies[zone][subzone][obj_name].append(dep_id)
+                sql_content = readfile(file_path)
+                for dep_id in self.dag_objects.keys():
+                    if dep_id in sql_content:
+                        path_parts = obj_id.split('_')
+                        zone, subzone, obj_name = path_parts[0], path_parts[1], '_'.join(path_parts[2:])
+                        if zone not in dependencies:
+                            dependencies[zone] = {}
+                        if subzone not in dependencies[zone]:
+                            dependencies[zone][subzone] = {}
+                        if obj_name not in dependencies[zone][subzone]:
+                            dependencies[zone][subzone][obj_name] = []
+                        dependencies[zone][subzone][obj_name].append(dep_id)
         return dependencies

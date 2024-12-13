@@ -2,6 +2,7 @@ import os
 import yaml
 import networkx as nx
 from bigdag.auto_deps import AutoDeps
+from bigdag.utils import readfile
 
 class Dag:
     def __init__(self, dag_folder):
@@ -15,11 +16,10 @@ class Dag:
     def _load_dependencies(self):
         if not os.path.exists(self.deps_file):
             return {}
-        with open(self.deps_file, 'r') as file:
-            dependencies = yaml.safe_load(file)
-            if not dependencies:
-                dependencies = {}
-            return dependencies
+        dependencies = yaml.safe_load(readfile(self.deps_file))
+        if not dependencies:
+            dependencies = {}
+        return dependencies
 
     def _merge_dependencies(self):
         def merge_dicts(dict1, dict2):
