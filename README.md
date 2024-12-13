@@ -15,7 +15,7 @@ BigDAG is an open-source project designed to facilitate the management and execu
 To install BigDAG, clone the repository and install it in editable mode:
 
 ```bash
-git clone https://github.com/yourusername/bigdag.git
+git clone https://github.com/feroult/bigdag.git
 cd bigdag
 pip install -e .
 ```
