@@ -15,7 +15,7 @@ class BigQueryRunner:
         # Replace placeholders and escape backticks
         return query.replace("{{project_id}}", self.project_id).replace("{{dataset}}", self.dataset_name).replace("`", "\\`")
 
-    def get_commands(self, object_ids=None):
+    def get_commands(self, object_ids=None, recreate=False):
         commands = []
 
         # Determine the execution order
@@ -27,6 +27,15 @@ class BigQueryRunner:
         for obj_id in execution_order:
             obj_type = self.dag.get_type(obj_id)
             path_prefix = self.dag.get_path_prefix(obj_id)
+            if recreate:
+                # Add command to delete the existing object
+                description = f"dropping {obj_type} {obj_id}"
+                if obj_type == 'sheet':
+                    description = f"dropping spreadsheet {obj_id}"
+                commands.append({
+                    'command': f"bq rm --force --project_id {self.project_id} --table {self.dataset_name}.{obj_id}",
+                    'description': description
+                })
             if obj_type == 'sheet':
                 schema_file = f"{path_prefix}.sheet.schema.json"
                 def_file = f"{path_prefix}.sheet.def.json"
