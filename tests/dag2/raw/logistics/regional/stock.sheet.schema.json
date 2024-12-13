@@ -1,0 +1,7 @@
+{
+    "fields": [
+        {"name": "product_id", "type": "STRING", "mode": "REQUIRED"},
+        {"name": "quantity", "type": "INTEGER", "mode": "REQUIRED"},
+        {"name": "region", "type": "STRING", "mode": "REQUIRED"}
+    ]
+}

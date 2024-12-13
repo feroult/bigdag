@@ -1,0 +1,7 @@
+{
+    "columns": [
+        {"name": "product_id", "type": "STRING"},
+        {"name": "quantity", "type": "INTEGER"},
+        {"name": "region", "type": "STRING"}
+    ]
+}

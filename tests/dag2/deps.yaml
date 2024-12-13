@@ -1,0 +1,13 @@
+raw:
+  logistics:
+    regional:
+      stock:
+        - trusted_logistics_regional_stock_view1
+        - trusted_logistics_regional_stock_view2
+trusted:
+  logistics:
+    regional:
+      stock_view1:
+        - refined_logistics_regional_product_table1
+      stock_view2:
+        - refined_logistics_regional_product_table2
