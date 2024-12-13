@@ -1,1 +1,10 @@
-{}
+{
+    "sourceFormat": "GOOGLE_SHEETS",
+    "sourceUris": [
+      "https://docs.google.com/spreadsheets/d/FAKE_SPREADSHEET_ID"
+    ],
+    "googleSheetsOptions": {
+        "range": "sales!A1:Z",
+        "skipLeadingRows": 1
+    }
+}
