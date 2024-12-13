@@ -35,5 +35,18 @@ class TestDag(unittest.TestCase):
         self.assertEqual(trusted_sales_prefix, 'tests/dag1/financial/trusted/sales')
         self.assertEqual(monthly_sales_prefix, 'tests/dag1/financial/refined/monthly_sales')
 
+    def test_multi_level_dag_execution_order(self):
+        dag_directory = 'tests/dag2'
+        dag = Dag(dag_directory)
+        execution_order = dag.get_execution_order()
+        expected_order = [
+            'raw_logistics_regional_stock',
+            'trusted_logistics_regional_stock_view1',
+            'trusted_logistics_regional_stock_view2',
+            'refined_logistics_regional_product_table1',
+            'refined_logistics_regional_product_table2'
+        ]
+        self.assertEqual(execution_order, expected_order)
+
 if __name__ == '__main__':
     unittest.main()

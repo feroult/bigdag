@@ -47,15 +47,16 @@ class Dag:
             graph.add_node(obj_name)
 
         # Add edges based on dependencies
-        for zone, subzones in self.dependencies.items():
-            for subzone, objects in subzones.items():
-                for obj, deps in objects.items():
-                    obj_id = f"{zone}_{subzone}_{obj}"
-                    if deps is None:
-                        deps = []
-                    for dep in deps:
-                        dep_id = dep.replace('%', '')
-                        graph.add_edge(dep_id, obj_id)  # Add an edge from dep_id to obj_id
+        def add_dependencies(dependencies, prefix=''):
+            for key, value in dependencies.items():
+                current_prefix = f"{prefix}_{key}" if prefix else key
+                if isinstance(value, dict):
+                    add_dependencies(value, current_prefix)
+                else:
+                    for dep in value:
+                        graph.add_edge(dep, current_prefix)
+
+        add_dependencies(self.dependencies)
 
         return graph
 
