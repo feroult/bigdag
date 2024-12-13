@@ -27,13 +27,7 @@ def cli(dag_folder, dataset_name, project_id, recreate, dry, verbose, object_ids
             for cmd_info in commands:
                 print(cmd_info['command'])
         else:
-            if recreate and not object_ids:
-                commands = runner.get_recreate_all()
-                for cmd_info in commands:
-                    print(cmd_info['description'])
-                runner.run_commands(dry_run=dry, verbose=verbose)
-            else:
-                runner.run_commands(dry_run=dry, verbose=verbose)
+            runner.run_commands(object_ids=object_ids, recreate=recreate, verbose=verbose)
     except ValueError as e:
         print(e)
     except RuntimeError as e:

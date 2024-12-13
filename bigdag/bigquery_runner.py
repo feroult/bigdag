@@ -82,8 +82,12 @@ class BigQueryRunner:
 
         return commands
 
-    def run_commands(self, dry_run=False, verbose=False):
-        commands = self.get_commands()
+    def run_commands(self, object_ids=None, recreate=False, verbose=False):
+        if recreate and not object_ids:
+            commands = self.get_recreate_all()
+        else:
+            commands = self.get_commands(object_ids=object_ids, recreate=recreate)
+        
         total_start_time = time.time()
 
         for cmd_info in commands:
@@ -91,20 +95,19 @@ class BigQueryRunner:
             description = cmd_info['description']
             print(f"{description} ", end='', flush=True)
 
-            if not dry_run:
-                start_time = time.time()
-                result = subprocess.run(command, shell=True, capture_output=True, text=True)
-                elapsed_time = time.time() - start_time
-                if result.returncode != 0:
-                    if verbose:
-                        print(f"\nCommand: {command}")
-                        print(f"Error: {result.stderr}")
-                    raise RuntimeError(f"Command failed: {command}")
+            start_time = time.time()
+            result = subprocess.run(command, shell=True, capture_output=True, text=True)
+            elapsed_time = time.time() - start_time
+            if result.returncode != 0:
                 if verbose:
                     print(f"\nCommand: {command}")
-                    print(result.stdout)
-                else:
-                    print(f"[ok] {elapsed_time:.2f} secs")
+                    print(f"Error: {result.stderr}")
+                raise RuntimeError(f"Command failed: {command}")
+            if verbose:
+                print(f"\nCommand: {command}")
+                print(result.stdout)
+            else:
+                print(f"[ok] {elapsed_time:.2f} secs")
 
         total_elapsed_time = time.time() - total_start_time
         print(f"all commands executed successfully in {total_elapsed_time:.2f} seconds.")
