@@ -15,7 +15,7 @@ class BigQueryRunner:
         # Replace placeholders and escape backticks
         return query.replace("{{project_id}}", self.project_id).replace("{{dataset}}", self.dataset_name).replace("`", "\\`")
 
-    def get_commands(self):
+    def get_commands(self, object_ids=None):
         commands = []
 
         # Command to create the dataset
@@ -24,8 +24,12 @@ class BigQueryRunner:
             'description': f"creating dataset {self.dataset_name}"
         })
 
-        # Commands to create each object in the correct order
+        # Determine the execution order
         execution_order = self.dag.get_execution_order()
+        if object_ids is not None:
+            execution_order = [obj_id for obj_id in execution_order if obj_id in object_ids]
+
+        # Commands to create each object in the specified order
         for obj_id in execution_order:
             obj_type = self.dag.get_type(obj_id)
             path_prefix = self.dag.get_path_prefix(obj_id)
